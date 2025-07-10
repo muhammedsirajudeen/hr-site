@@ -152,7 +152,7 @@ export default function HomePage() {
               <Zap className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-              ElectricHire
+              Onboard Tribe
             </span>
           </div>
           <nav className="hidden md:flex items-center space-x-8">
@@ -310,8 +310,8 @@ export default function HomePage() {
 
                   <Button
                     className={`w-full ${plan.buttonVariant === "default"
-                        ? `bg-gradient-to-r ${plan.gradient} hover:opacity-90 text-white shadow-lg shadow-blue-500/25`
-                        : `border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-black bg-transparent`
+                      ? `bg-gradient-to-r ${plan.gradient} hover:opacity-90 text-white shadow-lg shadow-blue-500/25`
+                      : `border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-black bg-transparent`
                       }`}
                     variant={plan.buttonVariant}
                     size="lg"
@@ -393,7 +393,7 @@ export default function HomePage() {
       <section className="relative z-10 py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            About ElectricHire
+            About Onboard Tribe
           </h2>
           <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
             We're creating a better way to match brilliant people with bold opportunities — human-first, fast, and
@@ -401,7 +401,7 @@ export default function HomePage() {
           </p>
           <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg p-8 max-w-2xl mx-auto border border-blue-500/20">
             <p className="text-lg text-gray-300 italic">
-              "ElectricHire transformed how we find talent. The quality of candidates and speed of hiring is unmatched."
+              "Onboard Tribe transformed how we find talent. The quality of candidates and speed of hiring is unmatched."
             </p>
             <div className="mt-4 text-blue-400 font-semibold">— Sarah Chen, CTO at TechFlow</div>
           </div>
@@ -440,7 +440,7 @@ export default function HomePage() {
                   <Zap className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                  ElectricHire
+                  Onboard Tribe
                 </span>
               </div>
               <p className="text-gray-400 text-sm">Connecting brilliant people with bold opportunities.</p>
@@ -480,7 +480,7 @@ export default function HomePage() {
               <ul className="space-y-2 text-gray-400 text-sm">
                 <li className="flex items-center">
                   <Mail className="w-4 h-4 mr-2" />
-                  hello@electrichire.com
+                  hello@Onboard Tribe.com
                 </li>
                 <li className="flex items-center">
                   <Phone className="w-4 h-4 mr-2" />
@@ -504,7 +504,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
-            <p>&copy; {new Date().getFullYear()} ElectricHire. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Onboard Tribe. All rights reserved.</p>
           </div>
         </div>
       </footer>
