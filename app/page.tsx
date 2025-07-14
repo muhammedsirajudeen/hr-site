@@ -1,3 +1,4 @@
+'use client'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
@@ -26,8 +27,10 @@ import {
   Shield,
 } from "lucide-react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 export default function HomePage() {
+  const router = useRouter()
   const categories = [
     { icon: Code2, title: "Engineering", description: "Full-stack, AI, DevOps & more" },
     { icon: Palette, title: "Design", description: "UI/UX, Brand, Product Design" },
@@ -135,7 +138,9 @@ export default function HomePage() {
       location: "Los Angeles, CA",
     },
   ]
-
+  const navHandler = () => {
+    router.push('/signin')
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
       {/* Animated Background Elements */}
@@ -173,6 +178,7 @@ export default function HomePage() {
             <Button
               variant="outline"
               className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-black bg-transparent"
+              onClick={navHandler}
             >
               Sign In
             </Button>
