@@ -28,9 +28,17 @@ import {
 } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import axiosInstance from "@/helper/axiosInstance"
+import Keys from "@/constants/Keys"
+import { useEffect, useState } from "react"
 
 export default function HomePage() {
   const router = useRouter()
+  const [mounted, setMounted] = useState(false)
+  const [signedIn, setSignedIn] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   const categories = [
     { icon: Code2, title: "Engineering", description: "Full-stack, AI, DevOps & more" },
     { icon: Palette, title: "Design", description: "UI/UX, Brand, Product Design" },
@@ -139,8 +147,31 @@ export default function HomePage() {
     },
   ]
   const navHandler = () => {
-    router.push('/signin')
+    if (signedIn) {
+      router.push('/profile')
+    } else {
+      router.push('/signin')
+    }
   }
+  async function userVerifier() {
+    try {
+      const response = await axiosInstance.post('/api/auth/verify',
+        {
+          access_token: window.localStorage.getItem(Keys.userToken)
+        }
+      )
+      setSignedIn(true)
+      console.log(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    if (!mounted) {
+      return
+    }
+    userVerifier()
+  }, [mounted])
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
       {/* Animated Background Elements */}
@@ -180,7 +211,7 @@ export default function HomePage() {
               className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-black bg-transparent"
               onClick={navHandler}
             >
-              Sign In
+              {signedIn ? "Profile" : "Sign In"}
             </Button>
           </nav>
         </div>

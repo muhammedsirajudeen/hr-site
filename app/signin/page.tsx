@@ -85,11 +85,6 @@ export default function SigninPage() {
                     </div>
                 </div>
 
-                {userInfo && (
-                    <div className="mt-4 text-slate-200 text-sm">
-                        Logged in as: {userInfo.name} ({userInfo.email})
-                    </div>
-                )}
             </div>
         </div>
     );
