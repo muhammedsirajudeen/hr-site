@@ -2,25 +2,39 @@
 import { useGoogleLogin } from '@react-oauth/google';
 import { useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '@/helper/axiosInstance';
+import UserModel from '@/model/User';
+import Keys from '@/constants/Keys';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function SigninPage() {
     const [userInfo, setUserInfo] = useState(null);
-
+    const router = useRouter()
     const login = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                const res = await axios.get(
-                    'https://www.googleapis.com/oauth2/v3/userinfo',
+                // const res = await axios.get(
+                //     'https://www.googleapis.com/oauth2/v3/userinfo',
+                //     {
+                //         headers: {
+                //             Authorization: `Bearer ${tokenResponse.access_token}`,
+                //         },
+                //     }
+                // );
+                // setUserInfo(res.data);
+                // console.log('User Info:', res.data);
+                const response = await axiosInstance.post('/api/auth/google',
                     {
-                        headers: {
-                            Authorization: `Bearer ${tokenResponse.access_token}`,
-                        },
+                        access_token: tokenResponse.access_token
                     }
-                );
-                setUserInfo(res.data);
-                console.log('User Info:', res.data);
+                )
+                console.log(response.data)
+                window.localStorage.setItem(Keys.userToken, response.data.token)
+                router.push('/')
             } catch (err) {
                 console.error('Error fetching user info:', err);
+                toast.error("user login failed please try again")
             }
         },
         onError: () => {
