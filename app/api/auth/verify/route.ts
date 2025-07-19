@@ -9,6 +9,9 @@ export async function POST(request: NextRequest) {
         const body = await request.json()
         console.log(body)
         const access_token = body.access_token
+        if(!access_token){
+            return NextResponse.json({message:"access token is missing"},{status:HttpStatusCode.BadRequest})
+        }
         const user = await JWTHelper.decode(access_token) as User
         //find one user from this
         const userDb = await UserModel.findOne({ email: user.email })
