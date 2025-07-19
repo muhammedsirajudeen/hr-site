@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: 'v0 App',
@@ -16,6 +17,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Toaster /> {/* ✅ Sonner Toaster */}
+
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!} >
           {children}
         </GoogleOAuthProvider>

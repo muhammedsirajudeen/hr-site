@@ -1,4 +1,5 @@
-'use client'
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
@@ -25,20 +26,26 @@ import {
   Crown,
   Rocket,
   Shield,
+  Menu,
+  X,
 } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import axiosInstance from "@/helper/axiosInstance"
 import Keys from "@/constants/Keys"
 import { useEffect, useState } from "react"
+import { toast } from "@/hooks/use-toast"
 
 export default function HomePage() {
   const router = useRouter()
   const [mounted, setMounted] = useState(false)
   const [signedIn, setSignedIn] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   useEffect(() => {
     setMounted(true)
   }, [])
+
   const categories = [
     { icon: Code2, title: "Engineering", description: "Full-stack, AI, DevOps & more" },
     { icon: Palette, title: "Design", description: "UI/UX, Brand, Product Design" },
@@ -146,32 +153,53 @@ export default function HomePage() {
       location: "Los Angeles, CA",
     },
   ]
+
   const navHandler = () => {
     if (signedIn) {
-      router.push('/profile')
+      router.push("/profile")
     } else {
-      router.push('/signin')
+      router.push("/signin")
     }
+    setMobileMenuOpen(false)
   }
+
   async function userVerifier() {
     try {
-      const response = await axiosInstance.post('/api/auth/verify',
-        {
-          access_token: window.localStorage.getItem(Keys.userToken)
-        }
-      )
+      const response = await axiosInstance.post("/api/auth/verify", {
+        access_token: window.localStorage.getItem(Keys.userToken),
+      })
       setSignedIn(true)
       console.log(response.data)
     } catch (error) {
       console.log(error)
     }
   }
+
   useEffect(() => {
     if (!mounted) {
       return
     }
     userVerifier()
   }, [mounted])
+  const jobHandler = async () => {
+    try {
+      const token = localStorage.getItem(Keys.userToken)
+      if (!token) {
+        toast({ title: "Please log in to explore jobs", variant: "destructive" })
+        return
+      }
+      const response = await axiosInstance.post('/api/auth/verify',
+        {
+          access_token: window.localStorage.getItem(Keys.userToken)
+        }
+      )
+      console.log(response.data)
+      router.push('/job')
+    } catch (error) {
+      console.log(error)
+      router.push('/signin')
+    }
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
       {/* Animated Background Elements */}
@@ -185,14 +213,13 @@ export default function HomePage() {
       <header className="relative z-10 border-b border-gray-800/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            {/* <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white" />
-            </div> */}
             <Image className="scale-150" alt="logo" src={"/logo.png"} height={70} width={70} />
             <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
               Onboard Tribe
             </span>
           </div>
+
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <a href="#" className="text-gray-300 hover:text-white transition-colors">
               Browse Jobs
@@ -214,7 +241,63 @@ export default function HomePage() {
               {signedIn ? "Profile" : "Sign In"}
             </Button>
           </nav>
+
+          {/* Mobile Navigation Button */}
+          <div className="md:hidden flex items-center space-x-4">
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-black bg-transparent"
+              onClick={navHandler}
+            >
+              {signedIn ? "Profile" : "Sign In"}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="text-white hover:bg-gray-800"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </Button>
+          </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-800/50 bg-gray-900/95 backdrop-blur-sm">
+            <nav className="container mx-auto px-4 py-4 flex flex-col space-y-4">
+              <a
+                href="#"
+                className="text-gray-300 hover:text-white transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Browse Jobs
+              </a>
+              <a
+                href="#pricing"
+                className="text-gray-300 hover:text-white transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Pricing
+              </a>
+              <a
+                href="#"
+                className="text-gray-300 hover:text-white transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Post a Job
+              </a>
+              <a
+                href="#"
+                className="text-gray-300 hover:text-white transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                About
+              </a>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
@@ -230,6 +313,7 @@ export default function HomePage() {
             <Button
               size="lg"
               className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 text-lg font-semibold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300"
+              onClick={jobHandler}
             >
               Explore Jobs
               <ArrowRight className="ml-2 w-5 h-5" />
@@ -305,7 +389,6 @@ export default function HomePage() {
               you.
             </p>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {pricingPlans.map((plan, index) => (
               <Card
@@ -320,7 +403,6 @@ export default function HomePage() {
                     </Badge>
                   </div>
                 )}
-
                 <CardHeader className="text-center pb-4">
                   <div
                     className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-r ${plan.gradient}/20 rounded-full flex items-center justify-center group-hover:${plan.gradient}/30 transition-all duration-300`}
@@ -336,7 +418,6 @@ export default function HomePage() {
                   </div>
                   <CardDescription className="text-gray-400">{plan.description}</CardDescription>
                 </CardHeader>
-
                 <CardContent className="pt-0">
                   <ul className="space-y-3 mb-8">
                     {plan.features.map((feature, featureIndex) => (
@@ -346,7 +427,6 @@ export default function HomePage() {
                       </li>
                     ))}
                   </ul>
-
                   <Button
                     className={`w-full ${plan.buttonVariant === "default"
                       ? `bg-gradient-to-r ${plan.gradient} hover:opacity-90 text-white shadow-lg shadow-blue-500/25`
@@ -361,7 +441,6 @@ export default function HomePage() {
               </Card>
             ))}
           </div>
-
           <div className="text-center mt-12">
             <p className="text-gray-400 mb-4">All plans include 14-day free trial • No setup fees • Cancel anytime</p>
             <div className="flex justify-center items-center space-x-8 text-sm text-gray-500">
@@ -440,7 +519,8 @@ export default function HomePage() {
           </p>
           <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg p-8 max-w-2xl mx-auto border border-blue-500/20">
             <p className="text-lg text-gray-300 italic">
-              "Onboard Tribe transformed how we find talent. The quality of candidates and speed of hiring is unmatched."
+              "Onboard Tribe transformed how we find talent. The quality of candidates and speed of hiring is
+              unmatched."
             </p>
             <div className="mt-4 text-blue-400 font-semibold">— Sarah Chen, CTO at TechFlow</div>
           </div>
@@ -519,7 +599,7 @@ export default function HomePage() {
               <ul className="space-y-2 text-gray-400 text-sm">
                 <li className="flex items-center">
                   <Mail className="w-4 h-4 mr-2" />
-                  hello@Onboard Tribe.com
+                  hello@onboardtribe.com
                 </li>
                 <li className="flex items-center">
                   <Phone className="w-4 h-4 mr-2" />
